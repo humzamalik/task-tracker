@@ -20,9 +20,6 @@ class Form extends Component {
              text: "",
              date: formatDate(Date())
         }
-        this.setText = this.setText.bind(this)
-        this.setDate = this.setDate.bind(this)
-        this.onSubmit = this.onSubmit.bind(this)
     }
 
     UNSAFE_componentWillReceiveProps(nextProps){
@@ -44,15 +41,15 @@ class Form extends Component {
     //     return null
     // }
 
-    setText(text){
+    setText = (text) => {
         this.setState({text})
     }
 
-    setDate(date){
+    setDate = (date) => {
         this.setState({date})
     }
 
-    onSubmit(e){
+    onSubmit = (e) => {
         e.preventDefault()
         const {text, date} = this.state
         const {isUpdateMode, onAddTask, updateTask, setUpdateMode, taskToUpdate} = this.props
@@ -76,11 +73,28 @@ class Form extends Component {
 
     render() {
         const {isUpdateMode} = this.props
+        const {text, date} = this.state
         return (
             <form onSubmit={this.onSubmit}>
-                <input type="text" value={this.state.text} onChange={(e)=> this.setText(e.target.value)} className="focus:outline-none shadow appearance-none border rounded py-2 px-3 text-grey-darker" placeholder="Write a note.."/>
-                <input type="date" value={this.state.date} onChange={(e)=> this.setDate(e.target.value)} className="focus:outline-none shadow appearance-none border rounded py-2 px-3 text-grey-darker ml-2"/>
-                <button type="submit" className="ml-2 rounded bg-gray-200 py-2 px-3">{isUpdateMode ? "Update" :  "Add"}</button>
+                <input
+                    type="text"
+                    value={text}
+                    placeholder="Write a note.."
+                    onChange={(e)=> this.setText(e.target.value)}
+                    className="focus:outline-none shadow appearance-none border rounded py-2 px-3 text-grey-darker"
+                />
+                <input
+                    type="date"
+                    value={date}
+                    onChange={(e)=> this.setDate(e.target.value)}
+                    className="focus:outline-none shadow appearance-none border rounded py-2 px-3 text-grey-darker ml-2"
+                />
+                <button
+                    type="submit"
+                    className="ml-2 rounded bg-gray-200 py-2 px-3"
+                >
+                    {isUpdateMode ? "Update" :  "Add"}
+                </button>
             </form>
         )
     }

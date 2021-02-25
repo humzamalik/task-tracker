@@ -29,46 +29,54 @@ class App extends Component {
         isUpdateMode: false,
         taskToUpdate: {}
     }
-
-    this.addTasks = this.addTasks.bind(this)
-    this.deleteTask = this.deleteTask.bind(this)
-    this.updateTask = this.updateTask.bind(this)
-    this.setUpdateMode = this.setUpdateMode.bind(this)
   }
 
-  setUpdateMode(task, flag){
+  setUpdateMode = (task, flag) => {
     this.setState({
       isUpdateMode: flag,
       taskToUpdate: task
     })
   }
   
-  addTasks(task){
+  addTasks = (task) => {
+    const { tasks } = this.state
     const id = Math.floor(Math.random() * 10000) + 1
     this.setState({
-      tasks: [...this.state.tasks, {...task, id}]
+      tasks: [...tasks, {...task, id}]
     })
   }
 
-  updateTask(newTask){
-    console.log(newTask)
+  updateTask = (newTask) => {
+    const { tasks } = this.state
     this.setState({
-      tasks: this.state.tasks.map((task)=> task.id === newTask.id ? newTask : task)
+      tasks: tasks.map((task)=> task.id === newTask.id ? newTask : task)
     })
   }
 
-  deleteTask(id){
+  deleteTask = (id) => {
+    const { tasks } = this.state
     this.setState({ 
-      tasks: this.state.tasks.filter((task) => task.id!==id) 
+      tasks: tasks.filter((task) => task.id!==id) 
     })
-  }
+  } 
 
   render() {
-    const tasks = this.state.tasks
+    const { tasks, isUpdateMode,  taskToUpdate} = this.state
     return (
       <>
-        <Header title="Task Tracker" onAddTask={this.addTasks} setUpdateMode={this.setUpdateMode} isUpdateMode={this.state.isUpdateMode} taskToUpdate={this.state.taskToUpdate} updateTask={ this.updateTask } />
-        <Container tasks={tasks} deleteTask={ this.deleteTask } setUpdateMode={this.setUpdateMode}/>
+        <Header
+          title="Task Tracker"
+          onAddTask={this.addTasks}
+          setUpdateMode={this.setUpdateMode}
+          isUpdateMode={isUpdateMode}
+          taskToUpdate={taskToUpdate}
+          updateTask={ this.updateTask } 
+        />
+        <Container
+          tasks={tasks}
+          deleteTask={this.deleteTask}
+          setUpdateMode={this.setUpdateMode}
+        />
       </>
     )
   }

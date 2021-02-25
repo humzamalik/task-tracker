@@ -3,12 +3,13 @@ import Task from './Task'
 
 class Container extends Component {
     render() {
+        const { deleteTask, setUpdateMode, tasks } = this.props
         return (
             <div className="container mx-auto mt-2">
-            {this.props.tasks.map(task => {
-                return <Task key={task.id} task={task} deleteTask={this.props.deleteTask} setUpdateMode={this.props.setUpdateMode}/>
-            })}
-        </div>
+                {tasks.map(task => {
+                    return <Task key={task.id} task={task} deleteTask={deleteTask} setUpdateMode={setUpdateMode}/>
+                })}
+            </div>
         )
     }
 }
