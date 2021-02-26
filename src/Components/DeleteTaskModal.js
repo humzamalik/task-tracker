@@ -27,7 +27,7 @@ class DeleteTaskModal extends Component {
         return (
             <>
                 <AiFillDelete
-                    className="ml-2 h-6 w-6 cursor-pointer"
+                    className="h-6 w-6 cursor-pointer"
                     onClick={() => this.setShowModal(true)}
                 >
                 </AiFillDelete>
