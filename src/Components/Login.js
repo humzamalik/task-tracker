@@ -1,7 +1,52 @@
+import axios from 'axios'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 class Login extends Component {
+
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+            username: "",
+             password: ""
+        }
+    }
+
+    setUsername = (username) => {
+        this.setState({ username })
+    }
+
+    setPassword = (password) => {
+        this.setState({ password })
+    }
+    
+    authUser = (username, password) => {
+        return axios.post(
+            'http://localhost:3100/api/users/login',
+            {
+                username,
+                password
+            }
+        )
+    }
+
+    onSubmit = async(e) => {
+        const { username, password } = this.state
+        e.preventDefault()
+        if(!username || !password){
+            alert("Please provide username and password")
+            return
+        }
+        try{
+            const resp = await this.authUser(username, password)
+            console.log({resp})
+        } catch (error) {
+            console.log(error)
+            return
+        }
+    }
+
 
     render() {
         return (
@@ -14,18 +59,22 @@ class Login extends Component {
                     >
                         <form
                             className="shadow-lg w-80 p-4 flex flex-col bg-white rounded-lg"
+                            onSubmit={this.onSubmit}
                         >
                             <input
                                 type="text"
                                 placeholder="Username"
+                                onChange={(e)=> this.setUsername(e.target.value)}
                                 className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500"
                             />
                             <input
-                                type="text"
+                                type="password"
                                 placeholder="Pasword"
+                                onChange={(e)=> this.setPassword(e.target.value)}
                                 className="mb-3 py-3 px-4 border border-gray-400 focus:outline-none rounded-md focus:ring-1 ring-cyan-500"
                             />
                             <button
+                                type="submit"
                                 className="w-full bg-gray-700 hover:bg-gray-800 text-white p-3 rounded-lg font-semibold text-lg mb-3"
                             >
                                 Login
