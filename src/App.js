@@ -7,8 +7,8 @@ import TitleHeader from './Components/TitleHeader'
 import "./Styles/main.css"
 import ProtectedRoute from './Components/ProtectedRoute'
 
+
 class App extends Component {
-  
   render() {
     return (
       <>
@@ -17,8 +17,8 @@ class App extends Component {
           <Switch>
               <Route path="/login" component={Login} />
               <Route path="/signup" component={Signup} />
-              <ProtectedRoute exact path="/" component={TaskTrackerNew} />
-              <ProtectedRoute component={TaskTrackerNew} />
+              <ProtectedRoute exact path="/" component={TaskTrackerNew}/>
+              <ProtectedRoute component={TaskTrackerNew}/>
           </Switch>
         </Router>
       </>

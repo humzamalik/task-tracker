@@ -1,16 +1,5 @@
 import React, { Component } from 'react'
-
-const formatDate = (date) => {
-    let d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
-    return [year, month, day].join('-');
-}
+import { format } from 'date-fns'
 
 class TaskEditor extends Component {
 
@@ -18,7 +7,7 @@ class TaskEditor extends Component {
         super(props)
         this.state = {
              text: "",
-             date: formatDate(Date())
+             date: format(new Date(), 'yyyy-MM-dd')
         }
     }
 
@@ -26,7 +15,7 @@ class TaskEditor extends Component {
         if(nextProps.isUpdateMode){
             this.setState({
                 text: nextProps.taskToUpdate.text,
-                date: nextProps.taskToUpdate.date
+                date: format(new Date(nextProps.taskToUpdate.date), "yyyy-MM-dd")
             })
         }
     }
@@ -49,16 +38,17 @@ class TaskEditor extends Component {
         }
         if(isUpdateMode){
             updateTask({
+                ...taskToUpdate,
                 text,
                 date,
-                id: taskToUpdate.id
+                _id: taskToUpdate._id
             })
             setUpdateMode(null, false)
         } else {
             onAddTask({text, date})
         }
         this.setText('')
-        this.setDate(formatDate(Date()))
+        this.setDate(format(new Date(), 'yyyy-MM-dd'))
     }
 
     render() {
