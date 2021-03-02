@@ -18,7 +18,7 @@ const signup = async(req, res, next) => {
     if (result) {
         return res.status(409).json({
             status: false,
-            message: "Username taken. please try another one"
+            message: "Username taken."
         })
     } else {
         try {
@@ -58,7 +58,7 @@ const login = async(req, res, next) => {
                     message: 'Auth Failed'
                 })
             }
-        } catch (_error) {
+        } catch (error) {
             res.status(401).json({
                 status: false,
                 message: 'Auth Failed'

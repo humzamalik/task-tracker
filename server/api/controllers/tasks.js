@@ -42,18 +42,24 @@ const getAll = async(req, res, next) => {
 }
 
 const post = async(req, res, next) => {
-    const { text } = req.body
+    const { text, date } = req.body
     const { userData } = req
-    if (!text) {
+    if (!text || !date) {
         return res.status(400).json({
             status: false,
-            message: 'text required'
+            message: 'text and date required'
         })
     }
     try {
-        await Task.create({
-            author: userData._id,
-            text
+        const task = await Task.create({
+            text,
+            date,
+            author: userData._id
+        })
+        res.status(201).json({
+            status: true,
+            message: "task created",
+            task
         })
     } catch (error) {
         return res.status(500).json({
@@ -61,26 +67,23 @@ const post = async(req, res, next) => {
             error
         })
     }
-    res.status(201).json({
-        status: true,
-        message: "task created"
-    })
 }
 
 const patch = async(req, res, next) => {
     const { id } = req.params
-    const { text } = req.body
+    const { text, date } = req.body
     const { userData } = req
-    if (!text) {
+    if (!text || !date) {
         return res.status(400).json({
             status: false,
-            message: 'text required'
+            message: 'text and date required'
         })
     }
     try {
         const result = await Task.updateOne({ _id: id, author: userData._id }, {
             $set: {
-                text
+                text,
+                date
             }
         })
         if (result.n > 0) {
@@ -104,8 +107,9 @@ const patch = async(req, res, next) => {
 
 const deleteOne = async(req, res, next) => {
     const { id } = req.params
-    const { userData } = requestAnimationFrame
+    const { userData } = req
     try {
+        console.log(id)
         const task = await Task.findOneAndDelete({ _id: id, author: userData._id })
         res.status(200).json({
             status: true,
