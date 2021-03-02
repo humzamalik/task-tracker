@@ -40,7 +40,7 @@ class Login extends Component {
     }
 
     onSubmit = async(e) => {
-        const { push } = this.props.history
+        const { setToken } = this.props
         const { username, password } = this.state
         e.preventDefault()
         if(!username || !password){
@@ -49,13 +49,12 @@ class Login extends Component {
         }
         try{
             const resp = await this.authUser(username, password)
-            console.log(resp)
             const {data} = resp
             const {status, token} = data
             if(status){
                 Cookies.set("token", token, {expires: 30})
             }
-            push("/")
+            setToken(token)
         } catch (error) {
             console.log({error})
             this.setLoginFailedToggle()
