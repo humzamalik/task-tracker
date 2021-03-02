@@ -1,13 +1,12 @@
-import React, { Component } from 'react'
+import "./Styles/main.css"
+import Cookies from 'js-cookie'
 import Login from './Components/Login'
 import Signup from './Components/Signup'
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
-import TaskTrackerNew from './Components/TaskTrackerNew'
-import TitleHeader from './Components/TitleHeader'
-import "./Styles/main.css"
+import Header from './Components/Header'
+import React, { Component } from 'react'
+import TaskTracker from './Components/TaskTracker'
 import ProtectedRoute from './Components/ProtectedRoute'
-import Cookies from 'js-cookie'
-
+import { BrowserRouter as Router, Switch } from 'react-router-dom'
 
 class App extends Component {
 
@@ -46,12 +45,36 @@ class App extends Component {
     const { logoutVisibilty, token } = this.state
     return (
       <>
-        <TitleHeader title={'Task Tracker'} logoutVisibilty={logoutVisibilty} setToken={this.setToken}/>
+        <Header
+          title={'Task Tracker'}
+          logoutVisibilty={logoutVisibilty}
+          setToken={this.setToken}
+        />
         <Router>
           <Switch>
-            <ProtectedRoute exact path="/signup" to='/' flag={!token} component={Signup}/>
-            <ProtectedRoute exact path="/login" to='/' flag={!token} component={Login} setToken={this.setToken}/>
-            <ProtectedRoute exact path="/" to='/login' flag={token} name={"hamza"} component={TaskTrackerNew} />
+            <ProtectedRoute
+              exact
+              path="/signup"
+              to='/'
+              flag={!token}
+              component={Signup}
+            />
+            <ProtectedRoute
+              exact
+              path="/login"
+              to='/'
+              flag={!token}
+              component={Login}
+              setToken={this.setToken}
+            />
+            <ProtectedRoute
+              exact
+              path="/"
+              to='/login'
+              flag={token}
+              name={"hamza"}
+              component={TaskTracker}
+            />
           </Switch>
         </Router>
       </>
