@@ -5,10 +5,6 @@ import DeleteTaskModal from './DeleteTaskModal'
 
 class Task extends Component {
     render() {
-        const iconStyle = {
-                    '--opacity': 1,
-                    'color': 'rgba(45, 55, 72, var(--opacity))'
-        }
         const { task , deleteTask, setUpdateMode } = this.props
         const { _id, text, date } = task
         return (
@@ -23,8 +19,7 @@ class Task extends Component {
                 </div>
                 <div className="flex flex-row space-x-2">
                     <AiFillEdit
-                        style={iconStyle}
-                        className="h-6 w-6 cursor-pointer" 
+                        className="gray-icon h-6 w-6 cursor-pointer" 
                         onClick={() => setUpdateMode(task, true)} 
                     />
                     <DeleteTaskModal 

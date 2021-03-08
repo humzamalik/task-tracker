@@ -6,19 +6,12 @@ class Header extends Component {
 
     logoutHandler = (e) => {
         const { setToken } = this.props
-        try {
-            Cookies.remove('token')
-            setToken(false)
-        } catch (error) {
-            console.log(error)
-        } 
+        Cookies.remove('token')
+        setToken(false)
     }
 
-    render() {
-        const logoutStyle = {
-            color: "#FFF"
-        }
-        const { title, logoutVisibilty } = this.props
+    render() {  
+        const { title, token } = this.props
         return (
             <header
                 className="flex items-center justify-between flex-wrap bg-gray-800 p-5"
@@ -34,8 +27,7 @@ class Header extends Component {
                 </div>
                 <BiLogOut 
                     onClick={this.logoutHandler}
-                    style={logoutStyle}
-                    className={`h-6 w-6 cursor-pointer ${logoutVisibilty? "" : "hidden"}`}
+                    className={`h-6 w-6 cursor-pointer logout-icon ${token? "" : "hidden"}`}
                 />
             </header>
         )

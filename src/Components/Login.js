@@ -16,7 +16,7 @@ class Login extends Component {
         }
     }
 
-    setLoginFailedToggle = () => {
+    toggleLoginFailed = () => {
         const { isLoginFailed } = this.state
         this.setState({isLoginFailed: !isLoginFailed})
     }
@@ -40,25 +40,23 @@ class Login extends Component {
     }
 
     onSubmit = async(e) => {
+        e.preventDefault()
         const { setToken } = this.props
         const { username, password } = this.state
-        e.preventDefault()
         if(!username || !password){
             alert("Please provide username and password")
             return
         }
         try{
             const resp = await this.authUser(username, password)
-            const {data} = resp
-            const {status, token} = data
+            const {status, token} = resp.data
             if(status){
                 Cookies.set("token", token, {expires: 30})
             }
             setToken(token)
         } catch (error) {
-            console.log({error})
-            this.setLoginFailedToggle()
-            setTimeout(this.setLoginFailedToggle, 5000)
+            this.toggleLoginFailed()
+            setTimeout(this.toggleLoginFailed, 5000)
             return
         }
     }
@@ -94,7 +92,7 @@ class Login extends Component {
                                 type="submit"
                                 className="w-full bg-gray-700 hover:bg-gray-800 text-white p-3 rounded-lg font-semibold text-lg mb-3"
                             >
-                                Login
+                                Log In
                             </button>
                             <hr />
                             <Link

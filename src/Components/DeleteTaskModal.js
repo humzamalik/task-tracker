@@ -24,15 +24,10 @@ class DeleteTaskModal extends Component {
     }
 
     render() {
-        const iconStyle = {
-                    '--opacity': 1,
-                    'color': 'rgba(45, 55, 72, var(--opacity))'
-        }
         return (
             <>
                 <AiFillDelete
-                    style={iconStyle}
-                    className="h-6 w-6 cursor-pointer"
+                    className="gray-icon h-6 w-6 cursor-pointer"
                     onClick={() => this.setShowModal(true)}
                 >
                 </AiFillDelete>

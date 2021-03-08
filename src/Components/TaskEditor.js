@@ -12,10 +12,11 @@ class TaskEditor extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(nextProps){
-        if(nextProps.isUpdateMode){
+        const { isUpdateMode, taskToUpdate } = nextProps
+        if(isUpdateMode){
             this.setState({
-                text: nextProps.taskToUpdate.text,
-                date: format(new Date(nextProps.taskToUpdate.date), "yyyy-MM-dd")
+                text: taskToUpdate.text,
+                date: format(new Date(taskToUpdate.date), "yyyy-MM-dd")
             })
         }
     }
@@ -38,7 +39,6 @@ class TaskEditor extends Component {
         }
         if(isUpdateMode){
             updateTask({
-                ...taskToUpdate,
                 text,
                 date,
                 _id: taskToUpdate._id

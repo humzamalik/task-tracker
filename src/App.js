@@ -1,9 +1,10 @@
+import React, { Component } from 'react'
+import "./index.css"
 import "./Styles/main.css"
 import Cookies from 'js-cookie'
 import Login from './Components/Login'
 import Signup from './Components/Signup'
 import Header from './Components/Header'
-import React, { Component } from 'react'
 import TaskTracker from './Components/TaskTracker'
 import ProtectedRoute from './Components/ProtectedRoute'
 import { BrowserRouter as Router, Switch } from 'react-router-dom'
@@ -14,40 +15,21 @@ class App extends Component {
     super(props)
   
     this.state = {
-      logoutVisibilty: false,
       token: Cookies.get("token")
     }
-  }
-  
-  setLogoutVisibilty = (flag) => {
-    this.setState({
-      logoutVisibilty: flag,
-    })
   }
 
   setToken = (token) => {
     this.setState({token})
-    if(token){
-      this.setLogoutVisibilty(true)
-    } else {
-      this.setLogoutVisibilty(false)
-    }
-  }
-  
-  componentDidMount(){
-    const { token } = this.state
-    if(token){
-      this.setLogoutVisibilty(true)
-    }
   }
 
   render() {
-    const { logoutVisibilty, token } = this.state
+    const { token } = this.state
     return (
       <>
         <Header
           title={'Task Tracker'}
-          logoutVisibilty={logoutVisibilty}
+          token={token}
           setToken={this.setToken}
         />
         <Router>

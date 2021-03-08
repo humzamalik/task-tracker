@@ -8,17 +8,20 @@ class Signup extends Component {
         super(props)
     
         this.state = {
+             isError: false,
+            message: "",
             username: "",
             password: "",
-            message: "",
-            messageColor: '',
             messageVisibility: false
         }
     }
 
     setSignupVisibilityToggle = () => {
-        const { messageVisibility } = this.state
-        this.setState({messageVisibility: !messageVisibility})
+        this.setState(
+            (prevState)=>{
+                return {messageVisibility: !prevState.messageVisibility}
+            }
+        )
     }
 
     setUsername = (username) => {
@@ -53,32 +56,28 @@ class Signup extends Component {
             if(status){
                 this.setState({
                     message,
-                    messageColor: "green",
+                     isError: false,
                     messageVisibility: true,
                 })
             }
         } catch (error) {
+            let message
             if (error.response){
-                const {message} = error.response.data 
-                this.setState({
-                    message,
-                    messageColor: "red",
-                    messageVisibility: true,
-                })
+                message = error.response.data.message
             } else {
-                const message =  "Signup Failed" 
-                this.setState({
-                    message,
-                    messageColor: "red",
-                    messageVisibility: true,
-                })
+                message =  "Signup Failed" 
             }
+            this.setState({
+                message,
+                 isError: true,
+                messageVisibility: true,
+            })
             setTimeout(this.setSignupVisibilityToggle, 5000);
         }
     }
 
     render() {
-        const { message, messageColor, messageVisibility } = this.state
+        const { message,  isError, messageVisibility } = this.state
         return (
             <>
                 <div 
@@ -92,7 +91,7 @@ class Signup extends Component {
                             onSubmit={this.onSubmit}
                         >
                             <h3
-                                className={`text-${messageColor}-900 pl-1 mb-1 ${messageVisibility ? "": "hidden"}`}
+                                className={`${ isError ? 'text-red-900' : 'text-green-900'} pl-1 mb-1 ${messageVisibility ? "": "hidden"}`}
                             >
                                 {message}
                             </h3>
@@ -111,7 +110,7 @@ class Signup extends Component {
                             <button
                                 className="w-full bg-gray-700 hover:bg-gray-800 text-white p-3 rounded-lg font-semibold text-lg mb-3"
                             >
-                                Signup
+                                Sign Up
                             </button>
                             <hr />
                             <Link 
