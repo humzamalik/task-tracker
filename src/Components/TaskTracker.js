@@ -4,6 +4,7 @@ import TaskEditor from './TaskEditor'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 import { BiError } from "react-icons/bi"
+import Pagination from './Pagination'
 
 class TaskTracker extends Component {
   constructor(props) {
@@ -11,6 +12,8 @@ class TaskTracker extends Component {
   
     this.state = {
       tasks: [],
+      totalPages: 0,
+      currentPage: 1,
       isError: false,
       errorMessage: '',
       taskToUpdate: {},
@@ -28,9 +31,9 @@ class TaskTracker extends Component {
   
   addTasks = async(task) => {
     const { text, date } = task
-    const { token, tasks } = this.state
+    const { token, currentPage } = this.state
     try {
-      const resp = await axios.post(
+      await axios.post(
         'http://localhost:3100/api/tasks',
         {
           text,
@@ -42,10 +45,7 @@ class TaskTracker extends Component {
           }
         }
       )
-      const {task} = resp.data
-      this.setState({
-        tasks: [...tasks, task]
-      })
+      this.setTasks(currentPage)
     } catch (error) {
       this.setState({
         isError: true,
@@ -57,7 +57,7 @@ class TaskTracker extends Component {
 
   updateTask = async(newTask) => {
     const {_id, date, text} = newTask
-    const { tasks, token } = this.state
+    const { currentPage, token } = this.state
     try {
       await axios.patch(
         `http://localhost:3100/api/tasks/${_id}`,
@@ -71,11 +71,8 @@ class TaskTracker extends Component {
           }
         }
       )
-      this.setState({
-        tasks: tasks.map((task)=> task._id === _id ? newTask : task)
-      })
+      this.setTasks(currentPage)
     } catch (error) {
-      console.log('object')
       this.setState({
         isError: true,
         errorMessage: 'Task updation failed'
@@ -85,7 +82,7 @@ class TaskTracker extends Component {
   }
 
   deleteTask = async(taskId) => {
-    const { tasks, token } = this.state
+    const { currentPage, token } = this.state
     try {
       await axios.delete(
         `http://localhost:3100/api/tasks/${taskId}`,
@@ -95,9 +92,7 @@ class TaskTracker extends Component {
           }
         }
       )
-      this.setState({ 
-        tasks: tasks.filter((task) => task._id!==taskId) 
-      })
+      this.setTasks(currentPage)
     } catch (error) {
       this.setState({
         isError: true,
@@ -107,11 +102,12 @@ class TaskTracker extends Component {
     }
   }
 
-  getTasks = () => {
+  getTasks = (params = {}) => {
     const {token} = this.state
     return axios.get(
       'http://localhost:3100/api/tasks',
       {
+        params,
         headers: {
           Authorization: token
         }
@@ -120,10 +116,18 @@ class TaskTracker extends Component {
   }
 
   async componentDidMount() {
+    this.setTasks()
+  }
+
+  pageNavigationHandler = (page) => {
+    this.setTasks(page)
+  }
+
+  setTasks = async(page = 1) => {
     try{
-      const resp = await this.getTasks()
-      const {tasks} = resp.data
-      this.setState({tasks})
+      const resp = await this.getTasks({page})
+      const {tasks, page: currentPage, pagesCount: totalPages} = resp.data
+      this.setState({tasks, currentPage, totalPages})
     } catch {
       this.setState({
         isError: true,
@@ -143,7 +147,7 @@ class TaskTracker extends Component {
   }
 
   render() {
-    const { tasks, isUpdateMode, taskToUpdate, isError, errorMessage } = this.state
+    const { tasks, isUpdateMode, taskToUpdate, isError, errorMessage, currentPage, totalPages } = this.state
     return (
         <>
           <div
@@ -172,6 +176,11 @@ class TaskTracker extends Component {
                   updateTask={ this.updateTask }
               />
           </div>
+          <Pagination
+                    currentPage= {currentPage}
+                    totalPages = {totalPages}
+                    pageNavigationHandler = {this.pageNavigationHandler}
+          />
         </>
     )
   }

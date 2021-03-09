@@ -5,11 +5,13 @@ class Container extends Component {
     render() {
         const { deleteTask, setUpdateMode, tasks } = this.props
         return (
-            <div className="flex flex-1 flex-col m-4">
-                {tasks.map(task => {
-                    return <Task key={task._id} task={task} deleteTask={deleteTask} setUpdateMode={setUpdateMode}/>
-                })}
-            </div>
+            <>
+                <div className="flex flex-1 flex-col m-4">
+                    {tasks.map(task => {
+                        return <Task key={task._id} task={task} deleteTask={deleteTask} setUpdateMode={setUpdateMode}/>
+                    })}
+                </div>
+            </>
         )
     }
 }

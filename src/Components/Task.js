@@ -19,7 +19,7 @@ class Task extends Component {
                 </div>
                 <div className="flex flex-row space-x-2">
                     <AiFillEdit
-                        className="gray-icon h-6 w-6 cursor-pointer" 
+                        className="text-gray-800 h-6 w-6 cursor-pointer" 
                         onClick={() => setUpdateMode(task, true)} 
                     />
                     <DeleteTaskModal 

@@ -27,7 +27,7 @@ class Header extends Component {
                 </div>
                 <BiLogOut 
                     onClick={this.logoutHandler}
-                    className={`h-6 w-6 cursor-pointer logout-icon ${token? "" : "hidden"}`}
+                    className={`h-6 w-6 cursor-pointer text-white ${token? "" : "hidden"}`}
                 />
             </header>
         )

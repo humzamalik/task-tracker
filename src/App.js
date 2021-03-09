@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import "./index.css"
 import "./Styles/main.css"
 import Cookies from 'js-cookie'
 import Login from './Components/Login'

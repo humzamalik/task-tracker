@@ -18,9 +18,7 @@ class Signup extends Component {
 
     setSignupVisibilityToggle = () => {
         this.setState(
-            (prevState)=>{
-                return {messageVisibility: !prevState.messageVisibility}
-            }
+            (prevState) => ({messageVisibility: !prevState.messageVisibility})
         )
     }
 
@@ -61,11 +59,9 @@ class Signup extends Component {
                 })
             }
         } catch (error) {
-            let message
+            let message =  "Signup Failed" 
             if (error.response){
                 message = error.response.data.message
-            } else {
-                message =  "Signup Failed" 
             }
             this.setState({
                 message,
