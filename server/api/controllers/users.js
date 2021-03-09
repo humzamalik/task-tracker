@@ -23,13 +23,14 @@ const signup = async(req, res, next) => {
     } else {
         try {
             const hash = await bcrypt.hash(password, 10)
-            await User.create({
+            const user = await User.create({
                 username,
                 password: hash,
             })
             res.status(201).json({
                 status: true,
-                message: "User Created"
+                message: "User Created",
+                token: generateToken(user._id)
             })
         } catch (error) {
             res.status(500).json({
