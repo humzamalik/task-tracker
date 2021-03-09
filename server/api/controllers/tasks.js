@@ -25,12 +25,23 @@ const getOne = async(req, res, next) => {
 }
 
 const getAll = async(req, res, next) => {
-    const { userData } = req
+    const { _id } = req.userData
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 5
     try {
-        const tasks = await Task.find({ author: userData._id }).populate("User")
+        const filter = { author: _id }
+        const tasks = await Task.find(filter)
+            .sort({ 'updatedAt': -1 })
+            .limit(limit)
+            .skip((page - 1) * limit)
+            .populate("User")
+        const count = await Task.countDocuments(filter)
         return res.status(200).json({
             status: true,
-            count: tasks.length,
+            totalCount: count,
+            pagesCount: Math.ceil(count / limit),
+            page,
+            pageSize: tasks.length,
             tasks
         })
     } catch (error) {
