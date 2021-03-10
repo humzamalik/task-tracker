@@ -12,6 +12,7 @@ class TaskTracker extends Component {
   
     this.state = {
       tasks: [],
+      sortOrder: -1,
       totalPages: 0,
       currentPage: 1,
       isError: false,
@@ -125,7 +126,8 @@ class TaskTracker extends Component {
 
   setTasks = async(page = 1) => {
     try{
-      const resp = await this.getTasks({page})
+      const {sortOrder} = this.state
+      const resp = await this.getTasks({page, sortOrder})
       const {tasks, page: currentPage, pagesCount: totalPages} = resp.data
       this.setState({tasks, currentPage, totalPages})
     } catch {
@@ -134,6 +136,12 @@ class TaskTracker extends Component {
         errorMessage: 'Network Connection Failed'
       })
     }
+  }
+
+  setSortOrder = async(e) => {
+    const { currentPage } = this.state
+    await this.setState({sortOrder: e.target.value})
+    this.setTasks(currentPage)
   }
 
   errorTimeout = () => {
@@ -147,7 +155,7 @@ class TaskTracker extends Component {
   }
 
   render() {
-    const { tasks, isUpdateMode, taskToUpdate, isError, errorMessage, currentPage, totalPages } = this.state
+    const { tasks, isUpdateMode, taskToUpdate, isError, errorMessage, currentPage, totalPages, sortOrder } = this.state
     return (
         <>
           <div
@@ -167,6 +175,8 @@ class TaskTracker extends Component {
                   tasks={tasks}
                   deleteTask={this.deleteTask}
                   setUpdateMode={this.setUpdateMode}
+                  sortOrder = {sortOrder}
+                  setSortOrder = {this.setSortOrder}
               />
               <TaskEditor
                   onAddTask={this.addTasks}

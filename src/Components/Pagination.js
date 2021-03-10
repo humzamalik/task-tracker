@@ -7,7 +7,7 @@ class Pagination extends Component {
         const { currentPage , totalPages, pageNavigationHandler } = this.props
         const pages = Array(totalPages).fill()
         return (totalPages>0) ? (
-            <ul className='relative z-0 flex rounded-md shadow-sm -space-x-px justify-center items-center rounded-mdborder-t border-gray-200 border-t border-gray-200'>
+            <ul className='relative z-0 flex shadow-sm -space-x-px justify-center items-center rounded-md border-gray-100 border-t'>
                 <li
                     onClick={() => pageNavigationHandler(currentPage-1)}
                     className={`relative inline-flex cursor-pointer items-center self-stretch px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-100`}

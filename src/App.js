@@ -39,6 +39,7 @@ class App extends Component {
               to='/'
               flag={!token}
               component={Signup}
+              setToken={this.setToken}
             />
             <ProtectedRoute
               exact
