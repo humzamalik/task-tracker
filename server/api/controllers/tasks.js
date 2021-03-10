@@ -28,10 +28,11 @@ const getAll = async(req, res, next) => {
     const { _id } = req.user
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 5
+    const {sortOrder = -1}  = req.query
     try {
         const filter = { author: _id }
         const tasks = await Task.find(filter)
-            .sort({ 'updatedAt': -1 })
+            .sort({ 'updatedAt': sortOrder })
             .limit(limit)
             .skip((page - 1) * limit)
             .populate("User")
