@@ -11,6 +11,7 @@ class TaskTracker extends Component {
     super(props)
   
     this.state = {
+      limit: 5,
       tasks: [],
       sortOrder: -1,
       totalPages: 0,
@@ -19,7 +20,8 @@ class TaskTracker extends Component {
       errorMessage: '',
       taskToUpdate: {},
       isUpdateMode: false,
-      token: Cookies.get("token")
+      token: Cookies.get("token"),
+      allowedLimits: [2, 5, 10]
     }
   }
 
@@ -117,7 +119,22 @@ class TaskTracker extends Component {
   }
 
   async componentDidMount() {
-    this.setTasks()
+    const { search } = this.props.location
+    const  { currentPage, sortOrder, limit, allowedLimits} = this.state
+    if(search){
+      const params = new URLSearchParams(search)
+      const paramSort = (!isNaN(params.get("sort")) && params.get("sort")) || sortOrder
+      const paramPage = (!isNaN(params.get("page")) && params.get("page")) || currentPage
+      const paramLimit =  (allowedLimits.includes(parseInt(params.get("limit"))) && params.get("limit")) || limit
+      await this.setState({
+        limit: paramLimit,
+        sortOrder: paramSort,
+        currentPage: paramPage
+      })
+      this.setTasks(paramPage)
+    } else{
+      this.setTasks()
+    }
   }
 
   pageNavigationHandler = (page) => {
@@ -126,8 +143,8 @@ class TaskTracker extends Component {
 
   setTasks = async(page = 1) => {
     try{
-      const {sortOrder} = this.state
-      const resp = await this.getTasks({page, sortOrder})
+      const {sortOrder, limit} = this.state
+      const resp = await this.getTasks({page, sortOrder, limit})
       const {tasks, page: currentPage, pagesCount: totalPages} = resp.data
       this.setState({tasks, currentPage, totalPages})
     } catch {
@@ -144,6 +161,12 @@ class TaskTracker extends Component {
     this.setTasks(currentPage)
   }
 
+  setLimit = async(e) => {
+    const { currentPage } = this.state
+    await this.setState({limit: e.target.value})
+    this.setTasks(currentPage)
+  }
+
   errorTimeout = () => {
     setTimeout( () =>
       this.setState({
@@ -155,7 +178,7 @@ class TaskTracker extends Component {
   }
 
   render() {
-    const { tasks, isUpdateMode, taskToUpdate, isError, errorMessage, currentPage, totalPages, sortOrder } = this.state
+    const { tasks, isUpdateMode, taskToUpdate, isError, errorMessage, currentPage, totalPages, sortOrder, limit, allowedLimits} = this.state
     return (
         <>
           <div
@@ -175,6 +198,9 @@ class TaskTracker extends Component {
                   tasks={tasks}
                   deleteTask={this.deleteTask}
                   setUpdateMode={this.setUpdateMode}
+                  limit={limit}
+                  allowedLimits={allowedLimits}
+                  setLimit={this.setLimit}
                   sortOrder = {sortOrder}
                   setSortOrder = {this.setSortOrder}
               />
