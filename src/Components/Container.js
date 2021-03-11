@@ -3,7 +3,7 @@ import Task from './Task'
 
 class Container extends Component {
     render() {
-        const { deleteTask, setUpdateMode, tasks, sortOrder, setSortOrder, limit, setLimit, allowedLimits } = this.props
+        const { deleteTask, setUpdateMode, tasks, sortOrder, setSortOrder, limit, setLimit, allowedLimits, infoMessage } = this.props
         return (tasks.length > 0) ? (
             <div className="flex flex-1 flex-col m-4">
                 <div className='flex flex-row-reverse items-center text-gray-700'>
@@ -42,7 +42,7 @@ class Container extends Component {
         ) : (
             <div className='flex flex-1 m-4 justify-center content-center'>
                 <span className='text-3xl text-center text-red-600'>
-                    No Tasks
+                    {infoMessage}
                 </span>
             </div>
         )

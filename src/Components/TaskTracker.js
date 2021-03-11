@@ -20,6 +20,7 @@ class TaskTracker extends Component {
       errorMessage: '',
       taskToUpdate: {},
       isUpdateMode: false,
+      infoMessage: "No Tasks",
       token: Cookies.get("token"),
       allowedLimits: [2, 5, 10]
     }
@@ -144,7 +145,9 @@ class TaskTracker extends Component {
   setTasks = async(page = 1) => {
     try{
       const {sortOrder, limit} = this.state
+      await this.setState({infoMessage: "Loading..."})
       const resp = await this.getTasks({page, sortOrder, limit})
+      this.setState({infoMessage: "No Tasks"})
       const {tasks, page: currentPage, pagesCount: totalPages} = resp.data
       this.setState({tasks, currentPage, totalPages})
     } catch {
@@ -178,7 +181,7 @@ class TaskTracker extends Component {
   }
 
   render() {
-    const { tasks, isUpdateMode, taskToUpdate, isError, errorMessage, currentPage, totalPages, sortOrder, limit, allowedLimits} = this.state
+    const { tasks, isUpdateMode, taskToUpdate, isError, errorMessage, currentPage, totalPages, sortOrder, limit, allowedLimits, infoMessage} = this.state
     return (
         <>
           <div
@@ -196,6 +199,7 @@ class TaskTracker extends Component {
           <div className="flex flex-col-reverse md:flex-row justify-between mx-auto">
               <Container
                   tasks={tasks}
+                  infoMessage={infoMessage}
                   deleteTask={this.deleteTask}
                   setUpdateMode={this.setUpdateMode}
                   limit={limit}
