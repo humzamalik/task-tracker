@@ -39,6 +39,7 @@ class App extends Component {
               to='/'
               flag={!token}
               component={Signup}
+              setToken={this.setToken}
             />
             <ProtectedRoute
               exact
@@ -53,7 +54,6 @@ class App extends Component {
               path="/"
               to='/login'
               flag={token}
-              name={"hamza"}
               component={TaskTracker}
             />
           </Switch>

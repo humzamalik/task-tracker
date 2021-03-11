@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import Cookies from 'js-cookie'
 
 class Signup extends Component {
 
@@ -8,7 +9,7 @@ class Signup extends Component {
         super(props)
     
         this.state = {
-             isError: false,
+            isError: false,
             message: "",
             username: "",
             password: "",
@@ -41,8 +42,9 @@ class Signup extends Component {
     }
 
     onSubmit = async(e) => {
-        const { username, password } = this.state
         e.preventDefault()
+        const { setToken } = this.props
+        const { username, password } = this.state
         if(!username || !password){
             alert("Please provide username and password")
             return
@@ -52,12 +54,16 @@ class Signup extends Component {
             const { data } = resp
             const { status, message } = data
             if(status){
+                const { token } = data
                 this.setState({
                     message,
                      isError: false,
                     messageVisibility: true,
                 })
+                Cookies.set("token", token, {expires: 30})
+                setToken(token)
             }
+
         } catch (error) {
             let message =  "Signup Failed" 
             if (error.response){
