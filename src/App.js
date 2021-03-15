@@ -1,25 +1,66 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import "./Styles/main.css"
+import Cookies from 'js-cookie'
+import Login from './Components/Login'
+import Signup from './Components/Signup'
+import Header from './Components/Header'
+import TaskTracker from './Components/TaskTracker'
+import ProtectedRoute from './Components/ProtectedRoute'
+import { BrowserRouter as Router, Switch } from 'react-router-dom'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+      token: Cookies.get("token")
+    }
+  }
+
+  setToken = (token) => {
+    this.setState({token})
+  }
+
+  render() {
+    const { token } = this.state
+    return (
+      <>
+        <Header
+          title={'Task Tracker'}
+          token={token}
+          setToken={this.setToken}
+        />
+        <Router>
+          <Switch>
+            <ProtectedRoute
+              exact
+              path="/signup"
+              to='/'
+              flag={!token}
+              component={Signup}
+              setToken={this.setToken}
+            />
+            <ProtectedRoute
+              exact
+              path="/login"
+              to='/'
+              flag={!token}
+              component={Login}
+              setToken={this.setToken}
+            />
+            <ProtectedRoute
+              exact
+              path="/"
+              to='/login'
+              flag={token}
+              component={TaskTracker}
+            />
+          </Switch>
+        </Router>
+      </>
+    )
+  }
 }
 
-export default App;
+export default App
