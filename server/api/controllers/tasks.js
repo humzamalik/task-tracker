@@ -2,9 +2,9 @@ import Task from "../models/task"
 
 const getOne = async(req, res, next) => {
     const { id } = req.params
-    const { userData } = req
+    const { user } = req
     try {
-        const task = await Task.findOne({ _id: id, author: userData._id })
+        const task = await Task.findOne({ _id: id, author: user._id })
         if (task) {
             res.status(200).json({
                 status: true,
@@ -13,7 +13,7 @@ const getOne = async(req, res, next) => {
         } else {
             res.status(404).json({
                 status: false,
-                message: "no task found against passed id "
+                message: "No task found against passed id "
             })
         }
     } catch (error) {
@@ -25,12 +25,24 @@ const getOne = async(req, res, next) => {
 }
 
 const getAll = async(req, res, next) => {
-    const { userData } = req
+    const { _id } = req.user
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 5
+    const {sortOrder = -1}  = req.query
     try {
-        const tasks = await Task.find({ author: userData._id }).populate("User")
+        const filter = { author: _id }
+        const tasks = await Task.find(filter)
+            .sort({ 'updatedAt': sortOrder })
+            .limit(limit)
+            .skip((page - 1) * limit)
+            .populate("User")
+        const count = await Task.countDocuments(filter)
         return res.status(200).json({
             status: true,
-            count: tasks.length,
+            totalCount: count,
+            pagesCount: Math.ceil(count / limit),
+            page,
+            pageSize: tasks.length,
             tasks
         })
     } catch (error) {
@@ -43,22 +55,22 @@ const getAll = async(req, res, next) => {
 
 const post = async(req, res, next) => {
     const { text, date } = req.body
-    const { userData } = req
+    const { user } = req
     if (!text || !date) {
         return res.status(400).json({
             status: false,
-            message: 'text and date required'
+            message: 'Text and date required'
         })
     }
     try {
         const task = await Task.create({
             text,
             date,
-            author: userData._id
+            author: user._id
         })
         res.status(201).json({
             status: true,
-            message: "task created",
+            message: "Task created",
             task
         })
     } catch (error) {
@@ -72,22 +84,22 @@ const post = async(req, res, next) => {
 const patch = async(req, res, next) => {
     const { id } = req.params
     const { text, date } = req.body
-    const { userData } = req
+    const { user } = req
     if (!text || !date) {
         return res.status(400).json({
             status: false,
-            message: 'text and date required'
+            message: 'Text and date required'
         })
     }
     try {
-        const result = await Task.updateOne({ _id: id, author: userData._id }, {
+        const result = await Task.updateOne({ _id: id, author: user._id }, {
             $set: {
                 text,
                 date
             }
         })
         if (result.n > 0) {
-            res.status(201).json({
+            res.status(200).json({
                 status: true,
                 message: "Updated"
             })
@@ -107,13 +119,12 @@ const patch = async(req, res, next) => {
 
 const deleteOne = async(req, res, next) => {
     const { id } = req.params
-    const { userData } = req
+    const { user } = req
     try {
-        console.log(id)
-        const task = await Task.findOneAndDelete({ _id: id, author: userData._id })
+        await Task.findOneAndDelete({ _id: id, author: user._id })
         res.status(200).json({
             status: true,
-            message: 'task deleted'
+            message: 'Task deleted'
         })
     } catch (error) {
         return res.status(500).json({
