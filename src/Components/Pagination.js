@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs"
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { getTasks } from '../redux'
 
 class Pagination extends Component {
-
     render() {
         const { currentPage , totalPages, pageNavigationHandler } = this.props
         let pages = []
@@ -73,4 +74,18 @@ class Pagination extends Component {
     }
 }
 
-export default Pagination
+const mapStateToProps = (state) => {
+  const {currentPage , totalPages} = state.task
+  return {
+    currentPage,
+    totalPages
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    pageNavigationHandler: (page) => dispatch(getTasks(page))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Pagination)

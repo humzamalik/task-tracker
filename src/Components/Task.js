@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { format } from 'date-fns'
 import { AiFillEdit } from 'react-icons/ai'
 import DeleteTaskModal from './DeleteTaskModal'
+import { connect } from 'react-redux'
+import { setUpdateMode } from '../redux'
 
 class Task extends Component {
     render() {
-        const { task , deleteTask, setUpdateMode } = this.props
+        const { task , setUpdateMode } = this.props
         const { _id, text, date } = task
         return (
             <div className="flex flex-row items-center justify-between mb-1">
@@ -24,7 +26,6 @@ class Task extends Component {
                     />
                     <DeleteTaskModal 
                         taskId={_id}
-                        deleteTask={deleteTask}
                     />
                 </div>
             </div>
@@ -32,4 +33,10 @@ class Task extends Component {
     }
 }
 
-export default Task
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUpdateMode: (task, flag) => dispatch(setUpdateMode(task, flag))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Task)

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { AiFillDelete } from "react-icons/ai";
-
+import { connect } from 'react-redux';
+import { deleteTask } from '../redux'
 
 class DeleteTaskModal extends Component {
     constructor(props) {
@@ -92,4 +93,10 @@ class DeleteTaskModal extends Component {
     }
 }
 
-export default DeleteTaskModal
+const mapDispatchToProps = (dispatch) => {
+    return {
+        deleteTask: (taskId) => dispatch(deleteTask(taskId))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(DeleteTaskModal)
