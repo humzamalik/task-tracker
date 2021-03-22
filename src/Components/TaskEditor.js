@@ -100,7 +100,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onAddTask: (task) => dispatch(addTasks(task)),
     updateTask: (task) => dispatch(updateTask(task)),
-    setUpdateMode: (task, flag) => dispatch(setUpdateMode(task, flag))
+    setUpdateMode: (task, updateMode) => dispatch(setUpdateMode(task, updateMode))
   }
 }
 

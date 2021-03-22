@@ -1,9 +1,9 @@
 import axios from "axios"
 import Cookies from "js-cookie"
 import {
-    REQUEST_FAILURE,
-    REQUEST_SUCCESS,
-    TASKS_REQUEST,
+    GET_TASKS_FAIL ,
+    GET_TASKS_SUCCESS ,
+    GET_TASKS,
     SET_SORT_ORDER,
     SET_PAGE_LIMIT,
     SET_UPDATE_MODE,
@@ -12,13 +12,13 @@ import {
 
 const tasksRequest = () => {
     return {
-        type: TASKS_REQUEST
+        type: GET_TASKS
     }
 }
 
 const requestSuccess = (data) => {
     return {
-        type: REQUEST_SUCCESS,
+        type: GET_TASKS_SUCCESS ,
         payload: data
     }
 }
@@ -32,7 +32,7 @@ const setSearchParams = (limit, sortOrder, currentPage) => {
 
 const requestFailure = () => {
     return {
-        type: REQUEST_FAILURE
+        type: GET_TASKS_FAIL 
     }
 }
 
@@ -50,10 +50,10 @@ const setPageLimit = (limit) => {
     }
 }
 
-const setUpdateMode = (task, flag) => {
+const setUpdateMode = (task, updateMode) => {
     return {
         type: SET_UPDATE_MODE,
-        payload: { task, flag }
+        payload: { task, updateMode }
     }
 }
 
@@ -78,7 +78,7 @@ const getTasks = (page) => {
             )
             const { tasks, page: currentPage, pagesCount: totalPages } = resp.data
             dispatch(requestSuccess({ tasks, currentPage, totalPages }))
-        } catch (_error) {
+        } catch (error) {
             dispatch(requestFailure())
         }
     }
@@ -100,7 +100,7 @@ const addTasks = (task) => {
                     }
                 })
             dispatch(getTasks(currentPage))
-        } catch (_error) {
+        } catch (error) {
             dispatch(requestFailure())
         }
     }
@@ -123,7 +123,7 @@ const updateTask = (newTask) => {
                     }
                 })
             dispatch(getTasks(currentPage))
-        } catch (_error) {
+        } catch (error) {
             dispatch(requestFailure())
         }
     }
@@ -142,7 +142,7 @@ const deleteTask = (taskId) => {
                     }
                 })
             dispatch(getTasks(currentPage))
-        } catch (_error) {
+        } catch (error) {
             dispatch(requestFailure())
         }
     }

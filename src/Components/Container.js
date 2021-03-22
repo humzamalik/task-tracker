@@ -5,8 +5,7 @@ import { setSort, setLimit } from '../redux'
 
 class Container extends Component {
     render() {
-        const { tasks, infoMessage } = this.props
-        const { sortOrder, setSort, limit, setLimit, allowedLimits } = this.props
+        const { tasks, infoMessage, sortOrder, setSort, limit, setLimit, allowedLimits } = this.props
         return (tasks.length > 0) ? (
             <div className="flex flex-1 flex-col m-4">
                 <div className='flex flex-row-reverse items-center text-gray-700'>

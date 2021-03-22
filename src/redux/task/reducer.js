@@ -1,7 +1,7 @@
 import {
-    REQUEST_FAILURE,
-    REQUEST_SUCCESS,
-    TASKS_REQUEST,
+    GET_TASKS_FAIL,
+    GET_TASKS_SUCCESS ,
+    GET_TASKS ,
     SET_SORT_ORDER,
     SET_PAGE_LIMIT,
     SET_UPDATE_MODE,
@@ -24,13 +24,13 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case TASKS_REQUEST:
+        case GET_TASKS :
             return {
                 ...state,
                 loading: true,
                 infoMessage: "Loading..."
             }
-        case REQUEST_SUCCESS:
+        case GET_TASKS_SUCCESS :
             const { tasks, totalPages, currentPage } = action.payload
             return {
                 ...state,
@@ -41,7 +41,7 @@ const reducer = (state = initialState, action) => {
                 isError: false,
                 infoMessage: tasks.length > 0 ? "" : "No Tasks",
             }
-        case REQUEST_FAILURE:
+        case GET_TASKS_FAIL:
             return {
                 ...state,
                 loading: false,
@@ -59,11 +59,11 @@ const reducer = (state = initialState, action) => {
                 limit: action.payload
             }
         case SET_UPDATE_MODE:
-            const { task, flag } = action.payload
+            const { task, updateMode } = action.payload
             return {
                 ...state,
                 taskToUpdate: task,
-                isUpdateMode: flag
+                isUpdateMode: updateMode
             }
         case SET_SEARCH_PARAMS:
             return {

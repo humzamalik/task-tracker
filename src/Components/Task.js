@@ -35,7 +35,7 @@ class Task extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setUpdateMode: (task, flag) => dispatch(setUpdateMode(task, flag))
+        setUpdateMode: (task, updateMode) => dispatch(setUpdateMode(task, updateMode))
     }
 }
 
