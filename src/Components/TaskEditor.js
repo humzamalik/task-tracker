@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { format } from 'date-fns'
+import { connect } from 'react-redux'
+import { addTasks, updateTask, setUpdateMode } from '../redux'
 
 class TaskEditor extends Component {
 
@@ -85,4 +87,21 @@ class TaskEditor extends Component {
     }
 }
 
-export default TaskEditor
+
+const mapStateToProps = (state) => {
+  const {isUpdateMode, taskToUpdate} = state.task
+  return {
+    isUpdateMode,
+    taskToUpdate
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAddTask: (task) => dispatch(addTasks(task)),
+    updateTask: (task) => dispatch(updateTask(task)),
+    setUpdateMode: (task, updateMode) => dispatch(setUpdateMode(task, updateMode))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskEditor)

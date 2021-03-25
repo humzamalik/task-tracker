@@ -7,6 +7,8 @@ import Header from './Components/Header'
 import TaskTracker from './Components/TaskTracker'
 import ProtectedRoute from './Components/ProtectedRoute'
 import { BrowserRouter as Router, Switch } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import store from './redux/store'
 
 class App extends Component {
 
@@ -25,7 +27,7 @@ class App extends Component {
   render() {
     const { token } = this.state
     return (
-      <>
+      <Provider store={store}>
         <Header
           title={'Task Tracker'}
           token={token}
@@ -58,7 +60,7 @@ class App extends Component {
             />
           </Switch>
         </Router>
-      </>
+      </Provider>
     )
   }
 }
