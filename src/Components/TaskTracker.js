@@ -4,7 +4,7 @@ import TaskEditor from './TaskEditor'
 import { BiError } from "react-icons/bi"
 import Pagination from './Pagination'
 import { connect } from 'react-redux'
-import { getTasks, setSearchParams } from '../redux'
+import { getTasksAsync, setSearchParams } from '../redux'
 
 class TaskTracker extends Component {
   constructor(props) {
@@ -17,7 +17,7 @@ class TaskTracker extends Component {
 
   componentDidMount() {
     const  { allowedLimits} = this.state
-    const { currentPage, sortOrder, limit, setSearchParams, getTasks, location} = this.props
+    const { currentPage, sortOrder, limit, setSearchParams, getTasksAsync, location} = this.props
     const { search } = location
     if(search){
       const params = new URLSearchParams(search)
@@ -29,9 +29,9 @@ class TaskTracker extends Component {
         paramSort,
         paramPage
       )
-      getTasks(paramPage)
+      getTasksAsync(paramPage)
     } else{
-      getTasks()
+      getTasksAsync()
     }
   }
 
@@ -78,7 +78,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getTasks: (page = 1) => dispatch(getTasks(page)),
+    getTasksAsync: (page = 1) => dispatch(getTasksAsync(page)),
     setSearchParams: (limit, sortOrder, currentPage) => dispatch(setSearchParams(limit, sortOrder, currentPage))
   }
 }

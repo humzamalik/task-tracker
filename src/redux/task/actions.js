@@ -10,13 +10,13 @@ import {
     SET_SEARCH_PARAMS
 } from "./types"
 
-const tasksRequest = () => {
+const getTasks = () => {
     return {
         type: GET_TASKS
     }
 }
 
-const requestSuccess = (data) => {
+const getTasksSuccess = (data) => {
     return {
         type: GET_TASKS_SUCCESS ,
         payload: data
@@ -30,7 +30,7 @@ const setSearchParams = (limit, sortOrder, currentPage) => {
     }
 }
 
-const requestFailure = () => {
+const getTasksFail = () => {
     return {
         type: GET_TASKS_FAIL 
     }
@@ -57,7 +57,7 @@ const setUpdateMode = (task, updateMode) => {
     }
 }
 
-const getTasks = (page) => {
+const getTasksAsync = (page) => {
     return async(dispatch, getState) => {
         const token = Cookies.get("token")
         const { sortOrder, limit } = getState().task
@@ -66,7 +66,7 @@ const getTasks = (page) => {
             limit,
             sortOrder
         }
-        dispatch(tasksRequest())
+        dispatch(getTasks())
         try {
             const resp = await axios.get(
                 'http://localhost:3100/api/tasks', {
@@ -77,9 +77,9 @@ const getTasks = (page) => {
                 }
             )
             const { tasks, page: currentPage, pagesCount: totalPages } = resp.data
-            dispatch(requestSuccess({ tasks, currentPage, totalPages }))
+            dispatch(getTasksSuccess({ tasks, currentPage, totalPages }))
         } catch (error) {
-            dispatch(requestFailure())
+            dispatch(getTasksFail())
         }
     }
 }
@@ -99,9 +99,9 @@ const addTasks = (task) => {
                         Authorization: token
                     }
                 })
-            dispatch(getTasks(currentPage))
+            dispatch(getTasksAsync(currentPage))
         } catch (error) {
-            dispatch(requestFailure())
+            dispatch(getTasksFail())
         }
     }
 }
@@ -111,7 +111,7 @@ const updateTask = (newTask) => {
         const { _id, date, text } = newTask
         const token = Cookies.get("token")
         const { currentPage } = getState().task
-        dispatch(tasksRequest())
+        dispatch(getTasks())
         try {
             await axios.patch(
                 `http://localhost:3100/api/tasks/${_id}`, {
@@ -122,9 +122,9 @@ const updateTask = (newTask) => {
                         Authorization: token
                     }
                 })
-            dispatch(getTasks(currentPage))
+            dispatch(getTasksAsync(currentPage))
         } catch (error) {
-            dispatch(requestFailure())
+            dispatch(getTasksFail())
         }
     }
 }
@@ -133,7 +133,7 @@ const deleteTask = (taskId) => {
     return async(dispatch, getState) => {
         const token = Cookies.get("token")
         const { currentPage } = getState().task
-        dispatch(tasksRequest())
+        dispatch(getTasks())
         try {
             await axios.delete(
                 `http://localhost:3100/api/tasks/${taskId}`, {
@@ -141,9 +141,9 @@ const deleteTask = (taskId) => {
                         Authorization: token
                     }
                 })
-            dispatch(getTasks(currentPage))
+            dispatch(getTasksAsync(currentPage))
         } catch (error) {
-            dispatch(requestFailure())
+            dispatch(getTasksFail())
         }
     }
 }
@@ -171,9 +171,9 @@ export {
     getTasks,
     updateTask,
     deleteTask,
-    tasksRequest,
+    getTasksAsync,
     setUpdateMode,
-    requestSuccess,
-    requestFailure,
+    getTasksSuccess,
+    getTasksFail,
     setSearchParams,
 }
